@@ -1,7 +1,10 @@
 <!doctype html><meta charset="utf-8"><title>Hermes Office 로그인 처리 중…</title>
 <p style="font-family:system-ui;padding:24px">Hermes Office로 돌아가는 중…</p>
 <script>
-  // Slack OAuth 콜백을 사내망 오피스로 그대로 전달 (코드는 1회용, state 검증은 오피스 서버가 수행)
-  var target = "http://10.80.0.134:8899/api/auth/callback" + location.search;
+  // Slack OAuth 콜백을 사내망 오피스로 전달 (코드는 1회용, state 검증은 오피스 서버가 수행).
+  // state 의 pXXXX. 접두사가 인스턴스 포트 (8899 solo / 8900 team) — 접두사 없으면 8899.
+  var state = new URLSearchParams(location.search).get("state") || "";
+  var m = state.match(/^p(\d{4,5})\./);
+  var target = "http://10.80.0.134:" + (m ? m[1] : "8899") + "/api/auth/callback" + location.search;
   location.replace(target);
 </script>
